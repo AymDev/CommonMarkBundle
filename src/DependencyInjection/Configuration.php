@@ -21,16 +21,14 @@ class Configuration implements ConfigurationInterface
                                 ->values(['commonmark', 'github'])
                                 ->defaultValue('commonmark')
                             ->end()
-                            ->arrayNode('options')
-                                ->defaultValue([])
-                            ->end()
-                            ->arrayNode('extensions')
-                                ->scalarPrototype()->end()
-                            ->end()
+                            ->arrayNode('options')->ignoreExtraKeys()->end()
+                            ->arrayNode('extensions')->scalarPrototype()->end()
                         ->end()
                     ->end()
                 ->end()
             ->end()
         ;
+
+        return $treeBuilder;
     }
 }

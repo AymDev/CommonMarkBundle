@@ -1,0 +1,16 @@
+aymdev_commonmark:
+    converters:
+        my_converter:
+
+        gh_converter:
+            type: github
+            options:
+                renderer:
+                    soft_break: "\n"
+                use_underscore: false
+                table_of_contents:
+                    position: top
+                    style: bullet
+            extensions:
+                - League\CommonMark\Extension\HeadingPermalink\HeadingPermalinkExtension
+                - League\CommonMark\Extension\TableOfContents\TableOfContentsExtension

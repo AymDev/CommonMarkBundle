@@ -1,8 +1,3 @@
-<<<<<<< HEAD
 /.idea/
 /vendor/
 composer.lock
-=======
-/vendor/
-/.idea/
->>>>>>> 05e5d90... ADD bundle class

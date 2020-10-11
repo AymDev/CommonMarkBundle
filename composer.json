@@ -27,5 +27,9 @@
         "psr-4": {
             "Tests\\Aymdev\\CommonmarkBundle\\": "tests/"
         }
+    },
+    "require-dev": {
+        "symfony/phpunit-bridge": "^4.4|^5.0",
+        "symfony/yaml": "^4.4|^5.0"
     }
 }

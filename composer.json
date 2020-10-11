@@ -1,0 +1,30 @@
+{
+    "name": "aymdev/commonmark-bundle",
+    "description": "Symfony bundle integrating League CommonMark for Symfony 4.4+ applications",
+    "type": "symfony-bundle",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "AymDev",
+            "email": "aymericmayeux@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+        "php": ">=7.1",
+        "symfony/http-kernel": "^4.4|^5.0",
+        "symfony/dependency-injection": "^4.4|^5.0",
+        "symfony/config": "^4.4|^5.0",
+        "league/commonmark": "^1.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "Aymdev\\CommonmarkBundle\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\Aymdev\\CommonmarkBundle\\": "tests/"
+        }
+    }
+}

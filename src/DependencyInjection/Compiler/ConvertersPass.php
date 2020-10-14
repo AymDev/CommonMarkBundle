@@ -46,7 +46,7 @@ class ConvertersPass implements CompilerPassInterface
         // Create converter definition
         $converterDefinition = new ChildDefinition('aymdev_commonmark.converter.type.' . $converterConfig['type']);
         $converterDefinition
-            ->addArgument($converterConfig['options'])
+            ->addArgument($converterConfig['options'] ?? [])
             ->addArgument(new Reference($environmentId))
         ;
 

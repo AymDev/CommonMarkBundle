@@ -4,6 +4,7 @@ namespace Tests\AymDev\CommonMarkBundle\DependencyInjection\Compiler;
 
 use Aymdev\CommonmarkBundle\DependencyInjection\AymdevCommonMarkExtension;
 use Aymdev\CommonmarkBundle\DependencyInjection\Compiler\ConvertersPass;
+use League\CommonMark\CommonMarkConverter;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
@@ -52,6 +53,10 @@ class ConvertersPassTest extends TestCase
 
             $converterId = 'aymdev_commonmark.converter.' . $converter['name'];
             self::assertTrue($container->has($converterId));
+
+            $alias = CommonMarkConverter::class . ' $';
+            $alias .= lcfirst(str_replace(' ', '', ucwords(str_replace('_', ' ', $converter['name']))));
+            self::assertTrue($container->hasAlias($alias));
         }
     }
 }

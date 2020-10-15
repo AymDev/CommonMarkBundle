@@ -2,6 +2,7 @@
 
 namespace Aymdev\CommonmarkBundle\DependencyInjection\Compiler;
 
+use League\CommonMark\CommonMarkConverter;
 use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -50,7 +51,9 @@ class ConvertersPass implements CompilerPassInterface
             ->addArgument(new Reference($environmentId))
         ;
 
-        $container->setDefinition('aymdev_commonmark.converter.' . $converterConfig['name'], $converterDefinition);
+        $converterId = 'aymdev_commonmark.converter.' . $converterConfig['name'];
+        $container->setDefinition($converterId, $converterDefinition);
+        $container->registerAliasForArgument($converterId, CommonMarkConverter::class, $converterConfig['name']);
 
         return $converterConfig;
     }

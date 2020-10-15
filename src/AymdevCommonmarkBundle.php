@@ -8,6 +8,9 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 class AymdevCommonmarkBundle extends Bundle
 {
+    /**
+     * @codeCoverageIgnore
+     */
     public function build(ContainerBuilder $container)
     {
         parent::build($container);

@@ -19,6 +19,7 @@ jobs:
                 with:
                     php-version: ${{ matrix.php }}
                     extensions: mbstring, xml, ctype, iconv, intl
+                    coverage: xdebug
 
             # Cache Composer dependencies
             -   name: Get composer cache directory
@@ -37,4 +38,4 @@ jobs:
 
             # Run tests suite
             -   name: Run test suite
-                run: php vendor/bin/simple-phpunit
+                run: php vendor/bin/simple-phpunit --coverage-text

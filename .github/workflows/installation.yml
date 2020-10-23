@@ -28,6 +28,7 @@ jobs:
             -   name: Create Symfony app
                 run: |
                     composer create-project symfony/skeleton:"${{ matrix.symfony }}.*" app
+                    composer require -d ./app sensio/framework-extra-bundle symfony/twig-pack
                     composer config -d ./app repositories.commonmark-bundle path ../project
                     composer config -d ./app minimum-stability dev
 
@@ -45,4 +46,13 @@ jobs:
 
             # Install the bundle
             -   name: Install AymdevCommonmarkBundle
-                run: composer require -d ./app --prefer-source aymdev/commonmark-bundle:"*"
+                run: |
+                    cp ./project/.github/fixtures/IntegrationController.php ./app/src/Controller/IntegrationController.php
+                    cp ./project/.github/fixtures/integration.html.twig ./app/templates/home.html.twig
+                    cp ./project/.github/fixtures/bundle_config.yaml ./app/config/packages/aymdev_commonmark.yaml
+                    composer require -d ./app --prefer-source aymdev/commonmark-bundle:"*"
+
+            # check homepage content
+            -   name: Check application homepage status
+                run: |
+                    [[ $(php ./app/public/index.php) == "<h1>test</h1>" ]] || exit 1

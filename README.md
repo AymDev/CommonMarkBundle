@@ -6,6 +6,15 @@ allowing you to set multiple **MarkDown** converters.
 [![Latest Stable Version](https://poser.pugx.org/aymdev/commonmark-bundle/v)](//packagist.org/packages/aymdev/commonmark-bundle)
 [![License](https://poser.pugx.org/aymdev/commonmark-bundle/license)](//packagist.org/packages/aymdev/commonmark-bundle)
 
+ - [Installation](#installation)
+ - [Configuration](#configuration)
+     - [Converter type](#converter-type)
+     - [Converter options](#converter-options)
+     - [Converter extensions](#converter-extensions)
+ - [Using the converters](#using-the-converters)
+     - [As services](#as-services)
+     - [In your templates](#in-your-templates)
+
 ## Installation
 Simply install it with **Composer**, an auto-generated recipe will enable the bundle for you:
 ```sh
@@ -31,29 +40,28 @@ aymdev_commonmark:
                 - League\CommonMark\Extension\HeadingPermalink\HeadingPermalinkExtension
 ```
 
-### Converter settings
-
 >Note that all keys inside a converter are optional.
 
-#### Converter type
+### Converter type
 
 The `type` key can be used to choose between a *CommonMark* or a *GitHub* converter:
 
  - `commonmark` (default): `CommonMarkConverter`
  - `github`: `GithubFlavoredMarkdownConverter`
 
-#### Converter options
+### Converter options
 
 The `options` key holds the configuration passed to the converter, as an array.
 >For more information, see the [CommonMark documentation about Configuration](https://commonmark.thephpleague.com/1.5/configuration/).
 
-#### Converter extensions
+### Converter extensions
 
 The `extensions` key allows to add any extension class to a converter.
 >Check the complete list of extensions on the [CommonMark documentation](https://commonmark.thephpleague.com/1.5/extensions/overview/).
 
-### Using the converters
+## Using the converters
 
+### As services
 The bundle registers your converters as **services** with the following ID:
 ```
 aymdev_commonmark.converter.CONVERTER_NAME
@@ -70,3 +78,11 @@ aymdev_commonmark:
         #   CommonMarkConverter $myConverter
         my_converter:
 ```
+
+### In your templates
+
+You can use the `commonmark` **Twig** filter. You only need to pass it a *converter name*:
+```twig
+{{ markdown_content|commonmark('my_converter') }}
+```
+>If you have only 1 *converter* you can ommit the *converter name*.

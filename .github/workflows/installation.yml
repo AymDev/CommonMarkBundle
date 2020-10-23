@@ -1,0 +1,48 @@
+name: Bundle installation
+on: push
+
+jobs:
+    integration-tests:
+        name: Installation in Symfony ${{ matrix.symfony }} with PHP ${{ matrix.php }}
+        runs-on: ubuntu-latest
+        strategy:
+            matrix:
+                php: ['7.2', '7.3', '7.4']
+                symfony: ['4.4', '5.0', '5.1']
+
+        steps:
+            # Setup
+            -   name: Checkout
+                uses: actions/checkout@v2
+                with:
+                    path: 'project'
+
+            -   name: PHP setup
+                uses: shivammathur/setup-php@v2
+                with:
+                    php-version: ${{ matrix.php }}
+                    extensions: mbstring, xml, ctype, iconv, intl
+                    coverage: xdebug
+
+            # Install symfony app
+            -   name: Create Symfony app
+                run: |
+                    composer create-project symfony/skeleton:"${{ matrix.symfony }}.*" app
+                    composer config -d ./app repositories.commonmark-bundle path ../project
+                    composer config -d ./app minimum-stability dev
+
+            # Cache Composer dependencies
+            -   name: Get composer cache directory
+                id: composer-cache
+                run: echo "::set-output name=dir::$(composer config -d ./app cache-files-dir)"
+
+            -   name: Cache dependencies
+                uses: actions/cache@v1
+                with:
+                    path: ${{ steps.composer-cache.outputs.dir }}
+                    key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}
+                    restore-keys: ${{ runner.os }}-composer-
+
+            # Install the bundle
+            -   name: Install AymdevCommonmarkBundle
+                run: composer require -d ./app --prefer-source aymdev/commonmark-bundle:"*"

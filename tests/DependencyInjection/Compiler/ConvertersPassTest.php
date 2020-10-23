@@ -2,14 +2,29 @@
 
 namespace Tests\AymDev\CommonMarkBundle\DependencyInjection\Compiler;
 
+use Aymdev\CommonmarkBundle\AymdevCommonmarkBundle;
 use Aymdev\CommonmarkBundle\DependencyInjection\AymdevCommonMarkExtension;
 use Aymdev\CommonmarkBundle\DependencyInjection\Compiler\ConvertersPass;
+use Aymdev\CommonmarkBundle\Twig\CommonMarkExtension;
 use League\CommonMark\CommonMarkConverter;
 use PHPUnit\Framework\TestCase;
+use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
+use Symfony\Bundle\TwigBundle\TwigBundle;
+use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpKernel\Kernel;
+use Twig\Environment;
 
 class ConvertersPassTest extends TestCase
 {
+    protected function tearDown(): void
+    {
+        $filesystem = new Filesystem();
+        $filesystem->remove(AymdevCommonmarkTestKernel::KERNEL_CACHE_DIR);
+        parent::tearDown();
+    }
+
     public function testContainerServicesRegistration()
     {
         $convertersPass = new ConvertersPass();
@@ -58,5 +73,73 @@ class ConvertersPassTest extends TestCase
             $alias .= lcfirst(str_replace(' ', '', ucwords(str_replace('_', ' ', $converter['name']))));
             self::assertTrue($container->hasAlias($alias));
         }
+    }
+
+    public function testTwigExtensionRegistration()
+    {
+        $kernel = new AymdevCommonmarkTestKernel([
+            'converters' => [
+                'my_converter' => [],
+            ]
+        ]);
+        $kernel->boot();
+        $container = $kernel->getContainer();
+
+        /** @var Environment $twig */
+        $twig = $container->get('twig');
+
+        // Twig extension is registered
+        $extension = $twig->getExtension(CommonMarkExtension::class);
+        self::assertInstanceOf(CommonMarkExtension::class, $extension);
+
+        // Twig filter works correctly
+        $markdown = '# test';
+        $template = "{{ markdown|commonmark('my_converter') }}";
+        $expectedOutput = '<h1>test</h1>';
+
+        $html = $twig->createTemplate($template)
+            ->render(['markdown' => $markdown]);
+        $html = trim($html);
+        self::assertSame($expectedOutput, $html);
+    }
+}
+
+class AymdevCommonmarkTestKernel extends Kernel
+{
+    public const KERNEL_CACHE_DIR = __DIR__ . '/../../cache';
+
+    /** @var array */
+    private $aymdevCommonmarkConfig;
+
+    public function __construct(array $aymdevCommonmarkConfig = [])
+    {
+        $this->aymdevCommonmarkConfig = $aymdevCommonmarkConfig;
+        parent::__construct('test', true);
+    }
+
+    public function registerBundles()
+    {
+        return [
+            new FrameworkBundle(),
+            new TwigBundle(),
+            new AymdevCommonmarkBundle(),
+        ];
+    }
+
+    public function registerContainerConfiguration(LoaderInterface $loader)
+    {
+        $loader->load(function (ContainerBuilder $container) {
+            $container->loadFromExtension('aymdev_commonmark', $this->aymdevCommonmarkConfig);
+        });
+    }
+
+    public function getCacheDir()
+    {
+        return self::KERNEL_CACHE_DIR . '/' . spl_object_hash($this);
+    }
+
+    public function getLogDir()
+    {
+        return $this->getCacheDir();
     }
 }

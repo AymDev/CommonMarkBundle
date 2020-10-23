@@ -12,6 +12,8 @@ use Symfony\Component\DependencyInjection\Reference;
 class ConvertersPass implements CompilerPassInterface
 {
     public const PARAMETER_CONVERTERS = 'aymdev_commonmark.converters';
+    /** @var string[] converter service IDs */
+    private $converters = [];
 
     public function process(ContainerBuilder $container)
     {
@@ -24,6 +26,7 @@ class ConvertersPass implements CompilerPassInterface
         }
 
         $container->setParameter(self::PARAMETER_CONVERTERS, $converters);
+        $this->setupTwigExtension($container);
     }
 
     private function registerConverters(array $converterConfig, ContainerBuilder $container): array
@@ -55,6 +58,15 @@ class ConvertersPass implements CompilerPassInterface
         $container->setDefinition($converterId, $converterDefinition);
         $container->registerAliasForArgument($converterId, CommonMarkConverter::class, $converterConfig['name']);
 
+        // Save converter for later twig extension arguments setup
+        $this->converters[$converterConfig['name']] = new Reference($converterId);
+
         return $converterConfig;
+    }
+
+    private function setupTwigExtension(ContainerBuilder $container): void
+    {
+        $twigExtensionDefinition = $container->getDefinition('aymdev_commonmark.twig_extension');
+        $twigExtensionDefinition->setArgument(0, $this->converters);
     }
 }

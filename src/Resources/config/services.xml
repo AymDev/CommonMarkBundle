@@ -15,5 +15,10 @@
         <!-- Converters -->
         <service id="aymdev_commonmark.converter.type.commonmark" class="League\CommonMark\CommonMarkConverter" />
         <service id="aymdev_commonmark.converter.type.github" class="League\CommonMark\GithubFlavoredMarkdownConverter" />
+
+        <!-- Twig extension -->
+        <service id="aymdev_commonmark.twig_extension" class="Aymdev\CommonmarkBundle\Twig\CommonMarkExtension">
+            <tag name="twig.extension" />
+        </service>
     </services>
 </container>

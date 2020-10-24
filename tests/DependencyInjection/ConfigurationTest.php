@@ -2,7 +2,7 @@
 
 namespace Tests\AymDev\CommonMarkBundle\DependencyInjection;
 
-use Aymdev\CommonmarkBundle\DependencyInjection\AymdevCommonMarkExtension;
+use Aymdev\CommonmarkBundle\DependencyInjection\AymdevCommonmarkExtension;
 use Aymdev\CommonmarkBundle\DependencyInjection\Compiler\ConvertersPass;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -17,7 +17,7 @@ class ConfigurationTest extends TestCase
     public function testConfigurationFormat($config)
     {
         $container = new ContainerBuilder();
-        $extension = new AymdevCommonMarkExtension();
+        $extension = new AymdevCommonmarkExtension();
 
         self::assertNull($extension->load($config, $container));
         $converters = $container->getParameter(ConvertersPass::PARAMETER_CONVERTERS);
@@ -43,5 +43,20 @@ class ConfigurationTest extends TestCase
         foreach ($configFiles as $file) {
             yield [Yaml::parse(file_get_contents($file))];
         }
+    }
+
+    public function testConverterOptionsAreWellParsed()
+    {
+        $file = __DIR__ . '/../Fixtures/config/configuration_options.yaml';
+        $config = Yaml::parse(file_get_contents($file));
+
+        $container = new ContainerBuilder();
+        $extension = new AymdevCommonmarkExtension();
+
+        $extension->load($config, $container);
+        $converter = $container->getParameter(ConvertersPass::PARAMETER_CONVERTERS);
+
+        $expectedOptions = $config['aymdev_commonmark']['converters']['my_converter']['options'];
+        self::assertSame($expectedOptions, $converter['my_converter']['options']);
     }
 }

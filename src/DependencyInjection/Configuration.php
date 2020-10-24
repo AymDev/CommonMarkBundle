@@ -21,7 +21,7 @@ class Configuration implements ConfigurationInterface
                                 ->values(['commonmark', 'github'])
                                 ->defaultValue('commonmark')
                             ->end()
-                            ->arrayNode('options')->ignoreExtraKeys()->end()
+                            ->variableNode('options')->end()
                             ->arrayNode('extensions')->scalarPrototype()->end()
                         ->end()
                     ->end()

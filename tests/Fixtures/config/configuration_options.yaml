@@ -1,0 +1,10 @@
+aymdev_commonmark:
+    converters:
+        my_converter:
+            type: commonmark
+            options:
+                renderer:
+                    soft_break: "\n"
+                use_underscore: false
+            extensions:
+                - League\CommonMark\Extension\Autolink\AutolinkExtension

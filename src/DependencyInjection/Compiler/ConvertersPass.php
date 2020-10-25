@@ -3,6 +3,8 @@
 namespace Aymdev\CommonmarkBundle\DependencyInjection\Compiler;
 
 use League\CommonMark\CommonMarkConverter;
+use League\CommonMark\Environment;
+use League\CommonMark\Extension\InlinesOnly\InlinesOnlyExtension;
 use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -32,7 +34,11 @@ class ConvertersPass implements CompilerPassInterface
     private function registerConverters(array $converterConfig, ContainerBuilder $container): array
     {
         // Create environment definition
-        $environment = new ChildDefinition('aymdev_commonmark.environment');
+        if ($converterConfig['type'] === 'empty') {
+            $environment = new Definition(Environment::class);
+        } else {
+            $environment = new ChildDefinition('aymdev_commonmark.environment');
+        }
 
         // Register and add extensions
         foreach ($converterConfig['extensions'] as $extensionName) {
@@ -52,6 +58,7 @@ class ConvertersPass implements CompilerPassInterface
         $converterDefinition
             ->addArgument($converterConfig['options'] ?? [])
             ->addArgument(new Reference($environmentId))
+            ->setPublic(true)
         ;
 
         $converterId = 'aymdev_commonmark.converter.' . $converterConfig['name'];

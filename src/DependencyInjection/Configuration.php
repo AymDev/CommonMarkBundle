@@ -18,7 +18,7 @@ class Configuration implements ConfigurationInterface
                     ->arrayPrototype()
                         ->children()
                             ->enumNode('type')
-                                ->values(['commonmark', 'github'])
+                                ->values(['commonmark', 'github', 'empty'])
                                 ->defaultValue('commonmark')
                             ->end()
                             ->variableNode('options')->end()

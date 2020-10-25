@@ -49,6 +49,7 @@ The `type` key can be used to choose between a *CommonMark* or a *GitHub* conver
 
  - `commonmark` (default): `CommonMarkConverter`
  - `github`: `GithubFlavoredMarkdownConverter`
+ - `empty`: creates a `CommonMarkConverter` without the `CommonMarkCoreExtension` (e.g. to use `InlinesOnlyExtension`)
 
 ### Converter options
 

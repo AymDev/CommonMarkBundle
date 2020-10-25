@@ -7,6 +7,7 @@ use Aymdev\CommonmarkBundle\DependencyInjection\AymdevCommonMarkExtension;
 use Aymdev\CommonmarkBundle\DependencyInjection\Compiler\ConvertersPass;
 use Aymdev\CommonmarkBundle\Twig\CommonMarkExtension;
 use League\CommonMark\CommonMarkConverter;
+use League\CommonMark\Extension\InlinesOnly\InlinesOnlyExtension;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\TwigBundle\TwigBundle;
@@ -101,6 +102,33 @@ class ConvertersPassTest extends TestCase
             ->render(['markdown' => $markdown]);
         $html = trim($html);
         self::assertSame($expectedOutput, $html);
+    }
+
+    /**
+     * Test empty environment
+     * The InlinesOnlyExtension needs to be added to an empty environment
+     * It must not be combined with the CommonMarkCoreExtension
+     */
+    public function testEmptyEnvironmentSetup()
+    {
+        $kernel = new AymdevCommonmarkTestKernel([
+            'converters' => [
+                'my_converter' => [
+                    'type' => 'empty',
+                    'extensions' => [
+                        InlinesOnlyExtension::class,
+                    ]
+                ],
+            ]
+        ]);
+        $kernel->boot();
+        $container = $kernel->getContainer();
+
+        /** @var CommonMarkConverter $converter */
+        $converter = $container->get('aymdev_commonmark.converter.my_converter');
+
+        // converting works correctly
+        self::assertSame('# test', trim($converter->convertToHtml('# test')));
     }
 }
 

@@ -65,10 +65,7 @@ The `extensions` key allows to add any extension class to a converter.
 ## Using the converters
 
 ### As services
-The bundle registers your converters as **services** with the following ID:
-```
-aymdev_commonmark.converter.CONVERTER_NAME
-```
+The bundle registers your converters as **services** with the converter name as the **service ID**.
 
 It also creates an alias, so you can get them by *autowiring* using the *converter name* as the *argument name*,
 type with the `League\CommonMark\CommonMarkConverter` class.

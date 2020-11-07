@@ -61,12 +61,22 @@ class ConvertersPass implements CompilerPassInterface
             ->setPublic(true)
         ;
 
+        // Current service ID
+        $container->setDefinition($converterConfig['name'], $converterDefinition);
+        $container->registerAliasForArgument($converterConfig['name'], CommonMarkConverter::class, $converterConfig['name']);
+
+        // Deprecated service ID
+        $deprecatedConverterDefinition = clone $converterDefinition;
+
+        $deprecationMessage = 'Using the %service_id% service ID is deprecated and will be removed in v2. ';
+        $deprecationMessage .= 'You should use the converter name instead.';
+        $deprecatedConverterDefinition->setDeprecated('aymdev/commonmark-bundle', '1.3.0', $deprecationMessage);
+
         $converterId = 'aymdev_commonmark.converter.' . $converterConfig['name'];
-        $container->setDefinition($converterId, $converterDefinition);
-        $container->registerAliasForArgument($converterId, CommonMarkConverter::class, $converterConfig['name']);
+        $container->setDefinition($converterId, $deprecatedConverterDefinition);
 
         // Save converter for later twig extension arguments setup
-        $this->converters[$converterConfig['name']] = new Reference($converterId);
+        $this->converters[$converterConfig['name']] = new Reference($converterConfig['name']);
 
         return $converterConfig;
     }

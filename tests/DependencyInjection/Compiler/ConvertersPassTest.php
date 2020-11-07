@@ -67,8 +67,13 @@ class ConvertersPassTest extends TestCase
                 self::assertTrue($container->has($extension));
             }
 
+            // Deprecated service ID
             $converterId = 'aymdev_commonmark.converter.' . $converter['name'];
             self::assertTrue($container->has($converterId));
+            self::assertTrue($container->getDefinition($converterId)->isDeprecated());
+
+            // Current service ID
+            self::assertTrue($container->has($converter['name']));
 
             $alias = CommonMarkConverter::class . ' $';
             $alias .= lcfirst(str_replace(' ', '', ucwords(str_replace('_', ' ', $converter['name']))));
@@ -125,7 +130,7 @@ class ConvertersPassTest extends TestCase
         $container = $kernel->getContainer();
 
         /** @var CommonMarkConverter $converter */
-        $converter = $container->get('aymdev_commonmark.converter.my_converter');
+        $converter = $container->get('my_converter');
 
         // converting works correctly
         self::assertSame('# test', trim($converter->convertToHtml('# test')));

@@ -6,6 +6,9 @@ use Aymdev\CommonmarkBundle\DependencyInjection\Compiler\ConvertersPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
+/**
+ * @internal
+ */
 class AymdevCommonmarkBundle extends Bundle
 {
     /**

@@ -14,6 +14,9 @@ use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 
+/**
+ * @internal
+ */
 class AymdevCommonmarkExtension extends Extension
 {
     public function load(array $configs, ContainerBuilder $container)

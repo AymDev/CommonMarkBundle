@@ -7,6 +7,9 @@ use Symfony\Component\DependencyInjection\ServiceLocator;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 
+/**
+ * @internal
+ */
 class CommonMarkExtension extends AbstractExtension
 {
     private $serviceLocator;

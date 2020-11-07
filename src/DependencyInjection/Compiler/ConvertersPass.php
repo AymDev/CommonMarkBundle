@@ -4,7 +4,6 @@ namespace Aymdev\CommonmarkBundle\DependencyInjection\Compiler;
 
 use League\CommonMark\CommonMarkConverter;
 use League\CommonMark\Environment;
-use League\CommonMark\Extension\InlinesOnly\InlinesOnlyExtension;
 use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\Compiler\ServiceLocatorTagPass;
@@ -12,6 +11,9 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
 
+/**
+ * @internal
+ */
 class ConvertersPass implements CompilerPassInterface
 {
     public const PARAMETER_CONVERTERS = 'aymdev_commonmark.converters';

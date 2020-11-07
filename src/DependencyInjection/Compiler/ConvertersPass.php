@@ -7,6 +7,7 @@ use League\CommonMark\Environment;
 use League\CommonMark\Extension\InlinesOnly\InlinesOnlyExtension;
 use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
+use Symfony\Component\DependencyInjection\Compiler\ServiceLocatorTagPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
@@ -14,7 +15,7 @@ use Symfony\Component\DependencyInjection\Reference;
 class ConvertersPass implements CompilerPassInterface
 {
     public const PARAMETER_CONVERTERS = 'aymdev_commonmark.converters';
-    /** @var string[] converter service IDs */
+    /** @var Reference[] converter service IDs */
     private $converters = [];
 
     public function process(ContainerBuilder $container)
@@ -84,6 +85,6 @@ class ConvertersPass implements CompilerPassInterface
     private function setupTwigExtension(ContainerBuilder $container): void
     {
         $twigExtensionDefinition = $container->getDefinition('aymdev_commonmark.twig_extension');
-        $twigExtensionDefinition->setArgument(0, $this->converters);
+        $twigExtensionDefinition->setArgument(0, ServiceLocatorTagPass::register($container, $this->converters));
     }
 }

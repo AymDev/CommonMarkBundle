@@ -3,22 +3,17 @@
 namespace Aymdev\CommonmarkBundle\Twig;
 
 use League\CommonMark\CommonMarkConverter;
+use Symfony\Component\DependencyInjection\ServiceLocator;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 
 class CommonMarkExtension extends AbstractExtension
 {
-    /**
-     * @var array<string, CommonMarkConverter>
-     */
-    private $converters;
+    private $serviceLocator;
 
-    /**
-     * @param array<string, CommonMarkConverter> $converters
-     */
-    public function __construct(array $converters)
+    public function __construct(ServiceLocator $serviceLocator)
     {
-        $this->converters = $converters;
+        $this->serviceLocator = $serviceLocator;
     }
 
     public function getFilters()
@@ -33,15 +28,16 @@ class CommonMarkExtension extends AbstractExtension
     public function convertMarkdown(?string $markdown, ?string $converterName = null): ?string
     {
         // Single converter setup
-        if ($converterName === null && count($this->converters) === 1) {
+        if ($converterName === null && count($this->serviceLocator->getProvidedServices()) === 1) {
             /** @var CommonMarkConverter $converter */
-            $converter = $this->converters[array_key_first($this->converters)];
+            $converterName = array_key_first($this->serviceLocator->getProvidedServices());
+            $converter = $this->serviceLocator->get($converterName);
             return $converter->convertToHtml($markdown);
         }
 
-        if (false === isset($this->converters[$converterName])) {
+        if (false === $this->serviceLocator->has($converterName)) {
             $message = 'The "%s" converter does not exists. Did you mean one of these ? %s';
-            $availableConverters = implode(', ', array_keys($this->converters));
+            $availableConverters = implode(', ', array_keys($this->serviceLocator->getProvidedServices()));
             throw new \InvalidArgumentException(sprintf($message, $converterName, $availableConverters));
         }
 
@@ -50,7 +46,7 @@ class CommonMarkExtension extends AbstractExtension
         }
 
         /** @var CommonMarkConverter $converter */
-        $converter = $this->converters[$converterName];
+        $converter = $this->serviceLocator->get($converterName);
         return $converter->convertToHtml($markdown);
     }
 }

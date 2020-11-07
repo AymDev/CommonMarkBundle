@@ -5,20 +5,26 @@ namespace Tests\AymDev\CommonMarkBundle\Twig;
 use Aymdev\CommonmarkBundle\Twig\CommonMarkExtension;
 use League\CommonMark\CommonMarkConverter;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\DependencyInjection\ServiceLocator;
 
 class CommonMarkExtensionTest extends TestCase
 {
     public function testFilterBasicUsage()
     {
-        $converterMockA = $this->getMockBuilder(CommonMarkConverter::class)->getMock();
-        $converterMockA->method('convertToHtml')->willReturn('a');
-        $converterMockB = $this->getMockBuilder(CommonMarkConverter::class)->getMock();
-        $converterMockB->method('convertToHtml')->willReturn('b');
-
-        $extension = new CommonMarkExtension([
-            'a_conv' => $converterMockA,
-            'b_conv' => $converterMockB,
+        $serviceLocator = new ServiceLocator([
+            'a_conv' => function() {
+                $converterMockA = $this->getMockBuilder(CommonMarkConverter::class)->getMock();
+                $converterMockA->method('convertToHtml')->willReturn('a');
+                return $converterMockA;
+            },
+            'b_conv' => function() {
+                $converterMockB = $this->getMockBuilder(CommonMarkConverter::class)->getMock();
+                $converterMockB->method('convertToHtml')->willReturn('b');
+                return $converterMockB;
+            },
         ]);
+
+        $extension = new CommonMarkExtension($serviceLocator);
 
         $output = $extension->convertMarkdown('', 'b_conv');
         self::assertSame('b', $output);
@@ -29,12 +35,16 @@ class CommonMarkExtensionTest extends TestCase
      */
     public function testFilterConverterNameIsOptional()
     {
-        $converterMock = $this->getMockBuilder(CommonMarkConverter::class)->getMock();
-        $converterMock->expects(self::once())->method('convertToHtml')->willReturnArgument(0);
+        $serviceLocator = new ServiceLocator([
+            'unique' => function() {
+                $converterMock = $this->getMockBuilder(CommonMarkConverter::class)->getMock();
+                $converterMock->expects(self::once())->method('convertToHtml')->willReturnArgument(0);
+                return $converterMock;
+            },
+        ]);
+        $extension = new CommonMarkExtension($serviceLocator);
 
         $expectedOutput = 'some markdown content';
-
-        $extension = new CommonMarkExtension(['unique' => $converterMock]);
         $actualOutput = $extension->convertMarkdown($expectedOutput);
 
         self::assertSame($expectedOutput, $actualOutput);
@@ -45,8 +55,12 @@ class CommonMarkExtensionTest extends TestCase
      */
     public function testFilterWithInvalidConverterName()
     {
-        $converterMock = $this->getMockBuilder(CommonMarkConverter::class)->getMock();
-        $extension = new CommonMarkExtension(['my_converter' => $converterMock]);
+        $serviceLocator = new ServiceLocator([
+            'my_converter' => function() {
+                return $this->getMockBuilder(CommonMarkConverter::class)->getMock();
+            },
+        ]);
+        $extension = new CommonMarkExtension($serviceLocator);
 
         self::expectException(\InvalidArgumentException::class);
         self::expectExceptionMessageMatches('~The ".+" converter does not exists. Did you mean one of these ?.+~');
@@ -59,8 +73,12 @@ class CommonMarkExtensionTest extends TestCase
      */
     public function testFilterWithNullContent()
     {
-        $converterMock = $this->getMockBuilder(CommonMarkConverter::class)->getMock();
-        $extension = new CommonMarkExtension(['my_converter' => $converterMock]);
+        $serviceLocator = new ServiceLocator([
+            'my_converter' => function() {
+                return $this->getMockBuilder(CommonMarkConverter::class)->getMock();
+            },
+        ]);
+        $extension = new CommonMarkExtension($serviceLocator);
 
         self::assertNull($extension->convertMarkdown(null, 'my_converter'));
     }

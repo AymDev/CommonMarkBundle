@@ -11,6 +11,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Deprecated
  - converter service IDs as `aymdev_commonmark.converter.CONVERTER_NAME` 
 
+### Changed
+ - Replace Twig extension constructor arguments with a service locator to improve performances
+
 ## [1.2.0] - 2020-10-25
 ### Added
  - New `empty` converter type

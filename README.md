@@ -24,18 +24,19 @@ composer require aymdev/commonmark-bundle
 
 ## Configuration
 No converter is created by default. 
-Create a **YAML** configuration file at path `config/packages/aymdev_commonmark.yaml` with the following content:
+Create a **YAML** configuration file at path `config/packages/aymdev_commonmark.yaml`. 
+Here is an example configuration declaring 2 converters:
 ```yaml
 aymdev_commonmark:
     converters:
         # add any converter here
-        my_custom_converter:
+        my_converter:
             type: 'github'
             options:
                 enable_strong: true
                 use_underscore: false
         
-        my_other_converter:
+        blog_post_converter:
             type: 'commonmark'
             extensions:
                 - League\CommonMark\Extension\HeadingPermalink\HeadingPermalinkExtension

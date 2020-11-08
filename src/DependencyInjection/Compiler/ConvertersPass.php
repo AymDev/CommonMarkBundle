@@ -10,6 +10,7 @@ use Symfony\Component\DependencyInjection\Compiler\ServiceLocatorTagPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
+use Symfony\Component\HttpKernel\Kernel;
 
 /**
  * @internal
@@ -73,7 +74,14 @@ class ConvertersPass implements CompilerPassInterface
 
         $deprecationMessage = 'Using the %service_id% service ID is deprecated and will be removed in v2. ';
         $deprecationMessage .= 'You should use the converter name instead.';
-        $deprecatedConverterDefinition->setDeprecated('aymdev/commonmark-bundle', '1.3.0', $deprecationMessage);
+
+        // Symfony <5.1
+        if (Kernel::MAJOR_VERSION <= 4 || (Kernel::MAJOR_VERSION === 5 && Kernel::MINOR_VERSION === 0)) {
+            $deprecatedConverterDefinition->setDeprecated(true, $deprecationMessage);
+        } else {
+            // Symfony >= 5.1
+            $deprecatedConverterDefinition->setDeprecated('aymdev/commonmark-bundle', '1.3.0', $deprecationMessage);
+        }
 
         $converterId = 'aymdev_commonmark.converter.' . $converterConfig['name'];
         $container->setDefinition($converterId, $deprecatedConverterDefinition);

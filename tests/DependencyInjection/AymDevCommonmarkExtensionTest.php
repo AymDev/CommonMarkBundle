@@ -4,9 +4,8 @@ namespace Tests\AymDev\CommonMarkBundle\DependencyInjection;
 
 use Aymdev\CommonmarkBundle\DependencyInjection\AymdevCommonMarkExtension;
 use Aymdev\CommonmarkBundle\DependencyInjection\Compiler\ConvertersPass;
-use League\CommonMark\CommonMarkConverter;
-use League\CommonMark\ConfigurableEnvironmentInterface;
-use League\CommonMark\GithubFlavoredMarkdownConverter;
+use League\CommonMark\Environment;
+use League\CommonMark\MarkdownConverter;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
@@ -34,16 +33,23 @@ class AymDevCommonmarkExtensionTest extends TestCase
 
         $extension->load([], $container);
 
-        // CommonMark Environment
-        $environment = $container->get('aymdev_commonmark.environment');
-        self::assertInstanceOf(ConfigurableEnvironmentInterface::class, $environment);
+        // "empty" Environment
+        $emptyEnvironment = $container->get('aymdev_commonmark.environment.empty');
+        self::assertInstanceOf(Environment::class, $emptyEnvironment);
+        self::assertCount(0, $emptyEnvironment->getExtensions());
 
-        // CommonMark base converter
-        $commonmarkConverter = $container->get('aymdev_commonmark.converter.type.commonmark');
-        self::assertInstanceOf(CommonMarkConverter::class, $commonmarkConverter);
-        
-        // CommonMark GitHub converter
-        $githubConverter = $container->get('aymdev_commonmark.converter.type.github');
-        self::assertInstanceOf(GithubFlavoredMarkdownConverter::class, $githubConverter);
+        // CommonMark Environment
+        $commonMarkEnvironment = $container->get('aymdev_commonmark.environment.commonmark');
+        self::assertInstanceOf(Environment::class, $commonMarkEnvironment);
+        self::assertNotCount(0, $commonMarkEnvironment->getExtensions());
+
+        // GitHub Environment
+        $githubEnvironment = $container->get('aymdev_commonmark.environment.github');
+        self::assertInstanceOf(Environment::class, $githubEnvironment);
+        self::assertNotCount(0, $githubEnvironment->getExtensions());
+
+        // converter
+        $converterDefinition = $container->getDefinition('aymdev_commonmark.converter');
+        self::assertSame(MarkdownConverter::class, $converterDefinition->getClass());
     }
 }

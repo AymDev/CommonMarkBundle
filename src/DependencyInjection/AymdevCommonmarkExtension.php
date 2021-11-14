@@ -4,15 +4,11 @@ namespace Aymdev\CommonmarkBundle\DependencyInjection;
 
 use Aymdev\CommonmarkBundle\DependencyInjection\Compiler\ConvertersPass;
 use Aymdev\CommonmarkBundle\Twig\CommonMarkExtension;
-use League\CommonMark\CommonMarkConverter;
-use League\CommonMark\ConfigurableEnvironmentInterface;
 use League\CommonMark\Environment;
-use League\CommonMark\GithubFlavoredMarkdownConverter;
-use Symfony\Component\Config\FileLocator;
+use League\CommonMark\MarkdownConverter;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Extension\Extension;
-use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 
 /**
  * @internal
@@ -36,26 +32,26 @@ class AymdevCommonmarkExtension extends Extension
      */
     private function createBundleServiceDefinitions(ContainerBuilder $container): void
     {
-        // Environment
+        // Environments
         $container
-            ->setDefinition('aymdev_commonmark.environment', new Definition(ConfigurableEnvironmentInterface::class))
+            ->setDefinition('aymdev_commonmark.environment.empty', new Definition(Environment::class))
+            ->setPublic(false)
+        ;
+        $container
+            ->setDefinition('aymdev_commonmark.environment.commonmark', new Definition(Environment::class))
             ->setFactory([Environment::class, 'createCommonMarkEnvironment'])
             ->setPublic(false)
         ;
 
-        // Converters
         $container
-            ->setDefinition('aymdev_commonmark.converter.type.commonmark', new Definition(CommonMarkConverter::class))
+            ->setDefinition('aymdev_commonmark.environment.github', new Definition(Environment::class))
+            ->setFactory([Environment::class, 'createGFMEnvironment'])
             ->setPublic(false)
         ;
 
+        // Converter
         $container
-            ->setDefinition('aymdev_commonmark.converter.type.github', new Definition(GithubFlavoredMarkdownConverter::class))
-            ->setPublic(false)
-        ;
-
-        $container
-            ->setAlias('aymdev_commonmark.converter.type.empty', 'aymdev_commonmark.converter.type.commonmark')
+            ->setDefinition('aymdev_commonmark.converter', new Definition(MarkdownConverter::class))
             ->setPublic(false)
         ;
 

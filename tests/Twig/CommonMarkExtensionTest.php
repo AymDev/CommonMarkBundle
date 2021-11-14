@@ -3,7 +3,7 @@
 namespace Tests\AymDev\CommonMarkBundle\Twig;
 
 use Aymdev\CommonmarkBundle\Twig\CommonMarkExtension;
-use League\CommonMark\CommonMarkConverter;
+use League\CommonMark\MarkdownConverter;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ServiceLocator;
 
@@ -13,12 +13,16 @@ class CommonMarkExtensionTest extends TestCase
     {
         $serviceLocator = new ServiceLocator([
             'a_conv' => function() {
-                $converterMockA = $this->getMockBuilder(CommonMarkConverter::class)->getMock();
+                $converterMockA = $this->getMockBuilder(MarkdownConverter::class)
+                    ->disableOriginalConstructor()
+                    ->getMock();
                 $converterMockA->method('convertToHtml')->willReturn('a');
                 return $converterMockA;
             },
             'b_conv' => function() {
-                $converterMockB = $this->getMockBuilder(CommonMarkConverter::class)->getMock();
+                $converterMockB = $this->getMockBuilder(MarkdownConverter::class)
+                    ->disableOriginalConstructor()
+                    ->getMock();
                 $converterMockB->method('convertToHtml')->willReturn('b');
                 return $converterMockB;
             },
@@ -37,7 +41,9 @@ class CommonMarkExtensionTest extends TestCase
     {
         $serviceLocator = new ServiceLocator([
             'unique' => function() {
-                $converterMock = $this->getMockBuilder(CommonMarkConverter::class)->getMock();
+                $converterMock = $this->getMockBuilder(MarkdownConverter::class)
+                    ->disableOriginalConstructor()
+                    ->getMock();
                 $converterMock->expects(self::once())->method('convertToHtml')->willReturnArgument(0);
                 return $converterMock;
             },
@@ -57,7 +63,9 @@ class CommonMarkExtensionTest extends TestCase
     {
         $serviceLocator = new ServiceLocator([
             'my_converter' => function() {
-                return $this->getMockBuilder(CommonMarkConverter::class)->getMock();
+                return $this->getMockBuilder(MarkdownConverter::class)
+                    ->disableOriginalConstructor()
+                    ->getMock();
             },
         ]);
         $extension = new CommonMarkExtension($serviceLocator);
@@ -75,7 +83,9 @@ class CommonMarkExtensionTest extends TestCase
     {
         $serviceLocator = new ServiceLocator([
             'my_converter' => function() {
-                return $this->getMockBuilder(CommonMarkConverter::class)->getMock();
+                return $this->getMockBuilder(MarkdownConverter::class)
+                    ->disableOriginalConstructor()
+                    ->getMock();
             },
         ]);
         $extension = new CommonMarkExtension($serviceLocator);

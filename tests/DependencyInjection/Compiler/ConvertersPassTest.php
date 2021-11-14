@@ -10,6 +10,7 @@ use League\CommonMark\CommonMarkConverter;
 use League\CommonMark\Extension\InlinesOnly\InlinesOnlyExtension;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
+use Symfony\Bundle\TwigBundle\DependencyInjection\TwigExtension;
 use Symfony\Bundle\TwigBundle\TwigBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -89,7 +90,7 @@ class ConvertersPassTest extends TestCase
             ]
         ]);
         $kernel->boot();
-        $container = $kernel->getContainer();
+        $container = $kernel->getContainer()->get('test.service_container');
 
         /** @var Environment $twig */
         $twig = $container->get('twig');
@@ -163,6 +164,12 @@ class AymdevCommonmarkTestKernel extends Kernel
     {
         $loader->load(function (ContainerBuilder $container) {
             $container->loadFromExtension('aymdev_commonmark', $this->aymdevCommonmarkConfig);
+
+            // Parameter is undefined but required
+            $container->setParameter('kernel.secret', '$ecret');
+
+            // Makes the test.service_container service available
+            $container->prependExtensionConfig('framework', ['test' => true]);
         });
     }
 

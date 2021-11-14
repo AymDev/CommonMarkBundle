@@ -11,11 +11,11 @@
     ],
     "minimum-stability": "stable",
     "require": {
-        "php": ">=7.1",
+        "php": "^7.1||^8.0",
         "symfony/http-kernel": "^4.4|^5.0",
         "symfony/dependency-injection": "^4.4|^5.0",
         "symfony/config": "^4.4|^5.0",
-        "league/commonmark": "^1.5",
+        "league/commonmark": "^2.0",
         "symfony/framework-bundle": "^4.4|^5.0"
     },
     "autoload": {
@@ -25,7 +25,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Tests\\Aymdev\\CommonmarkBundle\\": "tests/"
+            "Tests\\AymDev\\CommonmarkBundle\\": "tests/"
         }
     },
     "require-dev": {

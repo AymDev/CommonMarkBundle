@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\AymDev\CommonMarkBundle\DependencyInjection\Compiler;
+namespace Tests\Aymdev\CommonmarkBundle\DependencyInjection\Compiler;
 
 use Aymdev\CommonmarkBundle\AymdevCommonmarkBundle;
 use Aymdev\CommonmarkBundle\DependencyInjection\AymdevCommonMarkExtension;

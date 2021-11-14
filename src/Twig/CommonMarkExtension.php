@@ -50,6 +50,6 @@ class CommonMarkExtension extends AbstractExtension
 
         /** @var MarkdownConverter $converter */
         $converter = $this->serviceLocator->get($converterName);
-        return $converter->convertToHtml($markdown);
+        return $converter->convertToHtml($markdown)->getContent();
     }
 }

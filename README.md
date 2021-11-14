@@ -1,5 +1,5 @@
 # CommonMarkBundle
-A **Symfony 4 / 5** bundle to easily configure [league/commonmark](https://github.com/thephpleague/commonmark), 
+A **Symfony 4 / 5** bundle to easily configure [league/commonmark](https://github.com/thephpleague/commonmark) **v2**, 
 allowing you to set multiple **MarkDown** converters.
 
 ![Unit Test Suite](https://github.com/AymDev/CommonMarkBundle/workflows/Unit%20Test%20Suite/badge.svg)
@@ -55,12 +55,12 @@ The `type` key can be used to choose between a *CommonMark* or a *GitHub* conver
 ### Converter options
 
 The `options` key holds the configuration passed to the converter, as an array.
->For more information, see the [CommonMark documentation about Configuration](https://commonmark.thephpleague.com/1.5/configuration/).
+>For more information, see the [CommonMark documentation about Configuration](https://commonmark.thephpleague.com/2.0/configuration/).
 
 ### Converter extensions
 
 The `extensions` key allows to add any extension class to a converter.
->Check the complete list of extensions on the [CommonMark documentation](https://commonmark.thephpleague.com/1.5/extensions/overview/).
+>Check the complete list of extensions on the [CommonMark documentation](https://commonmark.thephpleague.com/2.0/extensions/overview/).
 
 ## Using the converters
 
@@ -68,14 +68,14 @@ The `extensions` key allows to add any extension class to a converter.
 The bundle registers your converters as **services** with the converter name as the **service ID**.
 
 It also creates an alias, so you can get them by *autowiring* using the *converter name* as the *argument name*,
-type with the `League\CommonMark\CommonMarkConverter` class.
+type with the `League\CommonMark\MarkdownConverter` class.
 
 **Example YAML configuration**:
 ```yaml
 aymdev_commonmark:
     converters:
         # You can add an argument for this converter as:
-        #   CommonMarkConverter $myConverter
+        #   MarkdownConverter $myConverter
         my_converter:
 ```
 

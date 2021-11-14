@@ -9,7 +9,6 @@ use Symfony\Component\DependencyInjection\Compiler\ServiceLocatorTagPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
-use Symfony\Component\HttpKernel\Kernel;
 
 /**
  * @internal
@@ -18,7 +17,7 @@ class ConvertersPass implements CompilerPassInterface
 {
     public const PARAMETER_CONVERTERS = 'aymdev_commonmark.converters';
     /** @var Reference[] converter service IDs */
-    private $converters = [];
+    private array $converters = [];
 
     public function process(ContainerBuilder $container)
     {
@@ -63,23 +62,6 @@ class ConvertersPass implements CompilerPassInterface
         // Current service ID
         $container->setDefinition($converterConfig['name'], $converterDefinition);
         $container->registerAliasForArgument($converterConfig['name'], MarkdownConverter::class, $converterConfig['name']);
-
-        // Deprecated service ID
-        $deprecatedConverterDefinition = clone $converterDefinition;
-
-        $deprecationMessage = 'Using the %service_id% service ID is deprecated and will be removed in v2. ';
-        $deprecationMessage .= 'You should use the converter name instead.';
-
-        // Symfony <5.1
-        if (Kernel::MAJOR_VERSION <= 4 || (Kernel::MAJOR_VERSION === 5 && Kernel::MINOR_VERSION === 0)) {
-            $deprecatedConverterDefinition->setDeprecated(true, $deprecationMessage);
-        } else {
-            // Symfony >= 5.1
-            $deprecatedConverterDefinition->setDeprecated('aymdev/commonmark-bundle', '1.3.0', $deprecationMessage);
-        }
-
-        $converterId = 'aymdev_commonmark.converter.' . $converterConfig['name'];
-        $container->setDefinition($converterId, $deprecatedConverterDefinition);
 
         // Save converter for later twig extension arguments setup
         $this->converters[$converterConfig['name']] = new Reference($converterConfig['name']);

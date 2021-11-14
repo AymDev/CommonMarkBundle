@@ -6,6 +6,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.0.0] - 2021-11-14
+### Changed
+ - minimal **league/commonmark** supported version is v2.0
+ - minimal **PHP** supported version is 7.4
+
+### Removed
+ - converter service IDs as `aymdev_commonmark.converter.CONVERTER_NAME`
+
 ## [1.3.1] - 2020-11-08
 ### Fixed
  - definition deprecation for *old* service IDs has been corrected for Symfony < 5.1
@@ -36,7 +44,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
  - Bundle base
 
-[Unreleased]: https://github.com/AymDev/CommonMarkBundle/compare/v1.3.1...HEAD
+[Unreleased]: https://github.com/AymDev/CommonMarkBundle/compare/v2.0.0...HEAD
+[2.0.0]: https://github.com/AymDev/CommonMarkBundle/compare/v1.3.1...v2.0.0
 [1.3.1]: https://github.com/AymDev/CommonMarkBundle/compare/v1.3.0...v1.3.1
 [1.3.0]: https://github.com/AymDev/CommonMarkBundle/compare/v1.2.0...v1.3.0
 [1.2.0]: https://github.com/AymDev/CommonMarkBundle/compare/v1.1.1...v1.2.0

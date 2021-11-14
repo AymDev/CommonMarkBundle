@@ -4,7 +4,7 @@ namespace Tests\AymDev\CommonMarkBundle\DependencyInjection;
 
 use Aymdev\CommonmarkBundle\DependencyInjection\AymdevCommonMarkExtension;
 use Aymdev\CommonmarkBundle\DependencyInjection\Compiler\ConvertersPass;
-use League\CommonMark\Environment;
+use League\CommonMark\Environment\Environment;
 use League\CommonMark\MarkdownConverter;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;

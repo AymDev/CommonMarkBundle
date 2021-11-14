@@ -4,6 +4,8 @@ namespace Tests\AymDev\CommonMarkBundle\Twig;
 
 use Aymdev\CommonmarkBundle\Twig\CommonMarkExtension;
 use League\CommonMark\MarkdownConverter;
+use League\CommonMark\Node\Block\Document;
+use League\CommonMark\Output\RenderedContent;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ServiceLocator;
 
@@ -16,19 +18,24 @@ class CommonMarkExtensionTest extends TestCase
                 $converterMockA = $this->getMockBuilder(MarkdownConverter::class)
                     ->disableOriginalConstructor()
                     ->getMock();
-                $converterMockA->method('convertToHtml')->willReturn('a');
+                $converterMockA->method('convertToHtml')
+                    ->willReturn(new RenderedContent(new Document(), 'a'));
                 return $converterMockA;
             },
             'b_conv' => function() {
                 $converterMockB = $this->getMockBuilder(MarkdownConverter::class)
                     ->disableOriginalConstructor()
                     ->getMock();
-                $converterMockB->method('convertToHtml')->willReturn('b');
+                $converterMockB->method('convertToHtml')
+                    ->willReturn(new RenderedContent(new Document(), 'b'));
                 return $converterMockB;
             },
         ]);
 
         $extension = new CommonMarkExtension($serviceLocator);
+
+        $output = $extension->convertMarkdown('', 'a_conv');
+        self::assertSame('a', $output);
 
         $output = $extension->convertMarkdown('', 'b_conv');
         self::assertSame('b', $output);
@@ -44,16 +51,15 @@ class CommonMarkExtensionTest extends TestCase
                 $converterMock = $this->getMockBuilder(MarkdownConverter::class)
                     ->disableOriginalConstructor()
                     ->getMock();
-                $converterMock->expects(self::once())->method('convertToHtml')->willReturnArgument(0);
+                $converterMock->expects(self::once())->method('convertToHtml')
+                    ->willReturn(new RenderedContent(new Document(), 'some markdown content'));
                 return $converterMock;
             },
         ]);
         $extension = new CommonMarkExtension($serviceLocator);
 
-        $expectedOutput = 'some markdown content';
-        $actualOutput = $extension->convertMarkdown($expectedOutput);
-
-        self::assertSame($expectedOutput, $actualOutput);
+        $actualOutput = $extension->convertMarkdown('');
+        self::assertSame('some markdown content', $actualOutput);
     }
 
     /**

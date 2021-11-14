@@ -4,7 +4,7 @@ namespace Aymdev\CommonmarkBundle\DependencyInjection;
 
 use Aymdev\CommonmarkBundle\DependencyInjection\Compiler\ConvertersPass;
 use Aymdev\CommonmarkBundle\Twig\CommonMarkExtension;
-use League\CommonMark\Environment;
+use League\CommonMark\Environment\Environment;
 use League\CommonMark\MarkdownConverter;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;

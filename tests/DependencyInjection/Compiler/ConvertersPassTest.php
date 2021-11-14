@@ -67,11 +67,6 @@ class ConvertersPassTest extends TestCase
                 self::assertTrue($container->has($extension));
             }
 
-            // Deprecated service ID
-            $converterId = 'aymdev_commonmark.converter.' . $converter['name'];
-            self::assertTrue($container->has($converterId));
-            self::assertTrue($container->getDefinition($converterId)->isDeprecated());
-
             // Current service ID
             self::assertTrue($container->has($converter['name']));
 
@@ -141,8 +136,7 @@ class AymdevCommonmarkTestKernel extends Kernel
 {
     public const KERNEL_CACHE_DIR = __DIR__ . '/../../cache';
 
-    /** @var array */
-    private $aymdevCommonmarkConfig;
+    private array $aymdevCommonmarkConfig;
 
     public function __construct(array $aymdevCommonmarkConfig = [])
     {

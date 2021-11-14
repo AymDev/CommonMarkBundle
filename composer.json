@@ -11,7 +11,7 @@
     ],
     "minimum-stability": "stable",
     "require": {
-        "php": "^7.1||^8.0",
+        "php": "^7.4||^8.0",
         "symfony/http-kernel": "^4.4|^5.0",
         "symfony/dependency-injection": "^4.4|^5.0",
         "symfony/config": "^4.4|^5.0",

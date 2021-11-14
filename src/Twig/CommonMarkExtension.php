@@ -12,7 +12,7 @@ use Twig\TwigFilter;
  */
 class CommonMarkExtension extends AbstractExtension
 {
-    private $serviceLocator;
+    private ServiceLocator $serviceLocator;
 
     public function __construct(ServiceLocator $serviceLocator)
     {

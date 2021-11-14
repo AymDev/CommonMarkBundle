@@ -68,11 +68,9 @@ class CommonMarkExtensionTest extends TestCase
     public function testFilterWithInvalidConverterName()
     {
         $serviceLocator = new ServiceLocator([
-            'my_converter' => function() {
-                return $this->getMockBuilder(MarkdownConverter::class)
-                    ->disableOriginalConstructor()
-                    ->getMock();
-            },
+            'my_converter' => fn() => $this->getMockBuilder(MarkdownConverter::class)
+                ->disableOriginalConstructor()
+                ->getMock(),
         ]);
         $extension = new CommonMarkExtension($serviceLocator);
 
@@ -88,11 +86,9 @@ class CommonMarkExtensionTest extends TestCase
     public function testFilterWithNullContent()
     {
         $serviceLocator = new ServiceLocator([
-            'my_converter' => function() {
-                return $this->getMockBuilder(MarkdownConverter::class)
-                    ->disableOriginalConstructor()
-                    ->getMock();
-            },
+            'my_converter' => fn() => $this->getMockBuilder(MarkdownConverter::class)
+                ->disableOriginalConstructor()
+                ->getMock(),
         ]);
         $extension = new CommonMarkExtension($serviceLocator);
 

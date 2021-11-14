@@ -6,11 +6,10 @@ use Aymdev\CommonmarkBundle\AymdevCommonmarkBundle;
 use Aymdev\CommonmarkBundle\DependencyInjection\AymdevCommonMarkExtension;
 use Aymdev\CommonmarkBundle\DependencyInjection\Compiler\ConvertersPass;
 use Aymdev\CommonmarkBundle\Twig\CommonMarkExtension;
-use League\CommonMark\CommonMarkConverter;
 use League\CommonMark\Extension\InlinesOnly\InlinesOnlyExtension;
+use League\CommonMark\MarkdownConverter;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
-use Symfony\Bundle\TwigBundle\DependencyInjection\TwigExtension;
 use Symfony\Bundle\TwigBundle\TwigBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -76,7 +75,7 @@ class ConvertersPassTest extends TestCase
             // Current service ID
             self::assertTrue($container->has($converter['name']));
 
-            $alias = CommonMarkConverter::class . ' $';
+            $alias = MarkdownConverter::class . ' $';
             $alias .= lcfirst(str_replace(' ', '', ucwords(str_replace('_', ' ', $converter['name']))));
             self::assertTrue($container->hasAlias($alias));
         }
@@ -130,7 +129,7 @@ class ConvertersPassTest extends TestCase
         $kernel->boot();
         $container = $kernel->getContainer();
 
-        /** @var CommonMarkConverter $converter */
+        /** @var MarkdownConverter $converter */
         $converter = $container->get('my_converter');
 
         // converting works correctly

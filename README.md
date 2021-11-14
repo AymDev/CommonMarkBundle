@@ -48,9 +48,9 @@ aymdev_commonmark:
 
 The `type` key can be used to choose between a *CommonMark* or a *GitHub* converter:
 
- - `commonmark` (default): `CommonMarkConverter`
- - `github`: `GithubFlavoredMarkdownConverter`
- - `empty`: creates a `CommonMarkConverter` without the `CommonMarkCoreExtension` (e.g. to use `InlinesOnlyExtension`)
+ - `commonmark` (default): `MarkdownConverter` with `CommonMarkCoreExtension`
+ - `github`: `MarkdownConverter` with `GithubFlavoredMarkdownExtension`
+ - `empty`: an empty `MarkdownConverter` (e.g. to use `InlinesOnlyExtension`)
 
 ### Converter options
 

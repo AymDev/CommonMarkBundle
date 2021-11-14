@@ -2,7 +2,7 @@
 
 namespace Aymdev\CommonmarkBundle\Twig;
 
-use League\CommonMark\CommonMarkConverter;
+use League\CommonMark\MarkdownConverter;
 use Symfony\Component\DependencyInjection\ServiceLocator;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
@@ -32,7 +32,7 @@ class CommonMarkExtension extends AbstractExtension
     {
         // Single converter setup
         if ($converterName === null && count($this->serviceLocator->getProvidedServices()) === 1) {
-            /** @var CommonMarkConverter $converter */
+            /** @var MarkdownConverter $converter */
             $converterName = array_key_first($this->serviceLocator->getProvidedServices());
             $converter = $this->serviceLocator->get($converterName);
             return $converter->convertToHtml($markdown);
@@ -48,7 +48,7 @@ class CommonMarkExtension extends AbstractExtension
             return null;
         }
 
-        /** @var CommonMarkConverter $converter */
+        /** @var MarkdownConverter $converter */
         $converter = $this->serviceLocator->get($converterName);
         return $converter->convertToHtml($markdown);
     }

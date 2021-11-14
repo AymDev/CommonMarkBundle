@@ -2,8 +2,7 @@
 
 namespace Aymdev\CommonmarkBundle\DependencyInjection\Compiler;
 
-use League\CommonMark\CommonMarkConverter;
-use League\CommonMark\Environment;
+use League\CommonMark\MarkdownConverter;
 use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\Compiler\ServiceLocatorTagPass;
@@ -38,11 +37,8 @@ class ConvertersPass implements CompilerPassInterface
     private function registerConverters(array $converterConfig, ContainerBuilder $container): array
     {
         // Create environment definition
-        if ($converterConfig['type'] === 'empty') {
-            $environment = new Definition(Environment::class);
-        } else {
-            $environment = new ChildDefinition('aymdev_commonmark.environment');
-        }
+        $environment = new ChildDefinition('aymdev_commonmark.environment.' . $converterConfig['type']);
+        $environment->addArgument($converterConfig['options'] ?? []);
 
         // Register and add extensions
         foreach ($converterConfig['extensions'] as $extensionName) {
@@ -58,16 +54,15 @@ class ConvertersPass implements CompilerPassInterface
         $container->setDefinition($environmentId, $environment);
 
         // Create converter definition
-        $converterDefinition = new ChildDefinition('aymdev_commonmark.converter.type.' . $converterConfig['type']);
+        $converterDefinition = new ChildDefinition('aymdev_commonmark.converter');
         $converterDefinition
-            ->addArgument($converterConfig['options'] ?? [])
             ->addArgument(new Reference($environmentId))
             ->setPublic(true)
         ;
 
         // Current service ID
         $container->setDefinition($converterConfig['name'], $converterDefinition);
-        $container->registerAliasForArgument($converterConfig['name'], CommonMarkConverter::class, $converterConfig['name']);
+        $container->registerAliasForArgument($converterConfig['name'], MarkdownConverter::class, $converterConfig['name']);
 
         // Deprecated service ID
         $deprecatedConverterDefinition = clone $converterDefinition;

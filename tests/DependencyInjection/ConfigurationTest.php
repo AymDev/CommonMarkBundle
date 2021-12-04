@@ -12,14 +12,17 @@ class ConfigurationTest extends TestCase
 {
     /**
      * Try multiple configuration files to validate desired format
+     * @param mixed[] $config
      * @dataProvider provideConfiguration
      */
-    public function testConfigurationFormat($config)
+    public function testConfigurationFormat(array $config): void
     {
         $container = new ContainerBuilder();
         $extension = new AymdevCommonmarkExtension();
 
-        self::assertNull($extension->load($config, $container));
+        $extension->load($config, $container);
+
+        /** @var converterConfig[] $converters */
         $converters = $container->getParameter(ConvertersPass::PARAMETER_CONVERTERS);
 
         foreach ($converters as $converter) {
@@ -36,24 +39,35 @@ class ConfigurationTest extends TestCase
         }
     }
 
+    /**
+     * @return \Generator<mixed[][]>
+     */
     public function provideConfiguration(): \Generator
     {
+        /** @var string[] $configFiles */
         $configFiles = glob(__DIR__ . '/../Fixtures/config/configuration_*.yaml');
 
         foreach ($configFiles as $file) {
-            yield [Yaml::parse(file_get_contents($file))];
+            /** @var string $content */
+            $content = file_get_contents($file);
+            /** @var mixed[] $result */
+            $result = Yaml::parse($content);
+            yield [$result];
         }
     }
 
-    public function testConverterOptionsAreWellParsed()
+    public function testConverterOptionsAreWellParsed(): void
     {
-        $file = __DIR__ . '/../Fixtures/config/configuration_options.yaml';
-        $config = Yaml::parse(file_get_contents($file));
+        /** @var string $content */
+        $content = file_get_contents(__DIR__ . '/../Fixtures/config/configuration_options.yaml');
+        /** @var array{aymdev_commonmark: array{converters: converterConfig[]}} $config */
+        $config = Yaml::parse($content);
 
         $container = new ContainerBuilder();
         $extension = new AymdevCommonmarkExtension();
 
         $extension->load($config, $container);
+        /** @var converterConfig[] $converter */
         $converter = $container->getParameter(ConvertersPass::PARAMETER_CONVERTERS);
 
         $expectedOptions = $config['aymdev_commonmark']['converters']['my_converter']['options'];

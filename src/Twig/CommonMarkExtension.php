@@ -30,22 +30,27 @@ class CommonMarkExtension extends AbstractExtension
 
     public function convertMarkdown(?string $markdown, ?string $converterName = null): ?string
     {
+        if (null === $markdown) {
+            return null;
+        }
+
         // Single converter setup
         if ($converterName === null && count($this->serviceLocator->getProvidedServices()) === 1) {
-            /** @var MarkdownConverter $converter */
             $converterName = array_key_first($this->serviceLocator->getProvidedServices());
+
+            /** @var MarkdownConverter $converter */
             $converter = $this->serviceLocator->get($converterName);
             return $converter->convertToHtml($markdown);
+        }
+
+        if (null === $converterName) {
+            return null;
         }
 
         if (false === $this->serviceLocator->has($converterName)) {
             $message = 'The "%s" converter does not exists. Did you mean one of these ? %s';
             $availableConverters = implode(', ', array_keys($this->serviceLocator->getProvidedServices()));
             throw new \InvalidArgumentException(sprintf($message, $converterName, $availableConverters));
-        }
-
-        if ($markdown === null) {
-            return null;
         }
 
         /** @var MarkdownConverter $converter */

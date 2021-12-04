@@ -6,7 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Added
-- support for **Symfony** v6
+ - support for **Symfony** v6
+ - **PHP CodeSniffer**, **PHP Compatibility**, **PHPStan** & **PHPStan strict rules** to the CI
 
 ## [2.0.0] - 2021-11-14
 ### Changed

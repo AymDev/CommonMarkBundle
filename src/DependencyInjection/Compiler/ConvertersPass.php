@@ -61,7 +61,11 @@ class ConvertersPass implements CompilerPassInterface
 
         // Current service ID
         $container->setDefinition($converterConfig['name'], $converterDefinition);
-        $container->registerAliasForArgument($converterConfig['name'], MarkdownConverter::class, $converterConfig['name']);
+        $container->registerAliasForArgument(
+            $converterConfig['name'],
+            MarkdownConverter::class,
+            $converterConfig['name']
+        );
 
         // Save converter for later twig extension arguments setup
         $this->converters[$converterConfig['name']] = new Reference($converterConfig['name']);

@@ -14,7 +14,7 @@ class CommonMarkExtensionTest extends TestCase
     public function testFilterBasicUsage()
     {
         $serviceLocator = new ServiceLocator([
-            'a_conv' => function() {
+            'a_conv' => function () {
                 $converterMockA = $this->getMockBuilder(MarkdownConverter::class)
                     ->disableOriginalConstructor()
                     ->getMock();
@@ -22,7 +22,7 @@ class CommonMarkExtensionTest extends TestCase
                     ->willReturn(new RenderedContent(new Document(), 'a'));
                 return $converterMockA;
             },
-            'b_conv' => function() {
+            'b_conv' => function () {
                 $converterMockB = $this->getMockBuilder(MarkdownConverter::class)
                     ->disableOriginalConstructor()
                     ->getMock();
@@ -47,7 +47,7 @@ class CommonMarkExtensionTest extends TestCase
     public function testFilterConverterNameIsOptional()
     {
         $serviceLocator = new ServiceLocator([
-            'unique' => function() {
+            'unique' => function () {
                 $converterMock = $this->getMockBuilder(MarkdownConverter::class)
                     ->disableOriginalConstructor()
                     ->getMock();

@@ -3,6 +3,7 @@ A **Symfony 4 / 5 / 6** bundle to easily configure [league/commonmark](https://g
 allowing you to set multiple **MarkDown** converters.
 
 ![Unit Test Suite](https://github.com/AymDev/CommonMarkBundle/workflows/Unit%20Test%20Suite/badge.svg)
+![Coding Standards](https://github.com/AymDev/CommonMarkBundle/workflows/Coding%20Standards/badge.svg)
 ![Bundle installation](https://github.com/AymDev/CommonMarkBundle/workflows/Bundle%20installation/badge.svg)
 [![Latest Stable Version](https://poser.pugx.org/aymdev/commonmark-bundle/v)](//packagist.org/packages/aymdev/commonmark-bundle)
 [![License](https://poser.pugx.org/aymdev/commonmark-bundle/license)](//packagist.org/packages/aymdev/commonmark-bundle)

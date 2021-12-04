@@ -11,7 +11,7 @@ use Symfony\Component\DependencyInjection\ServiceLocator;
 
 class CommonMarkExtensionTest extends TestCase
 {
-    public function testFilterBasicUsage()
+    public function testFilterBasicUsage(): void
     {
         $serviceLocator = new ServiceLocator([
             'a_conv' => function () {
@@ -44,7 +44,7 @@ class CommonMarkExtensionTest extends TestCase
     /**
      * The twig filter must work without the converter name argument if there is only one converter
      */
-    public function testFilterConverterNameIsOptional()
+    public function testFilterConverterNameIsOptional(): void
     {
         $serviceLocator = new ServiceLocator([
             'unique' => function () {
@@ -65,7 +65,7 @@ class CommonMarkExtensionTest extends TestCase
     /**
      * An exception is thrown if the provided converter name is wrong
      */
-    public function testFilterWithInvalidConverterName()
+    public function testFilterWithInvalidConverterName(): void
     {
         $serviceLocator = new ServiceLocator([
             'my_converter' => fn() => $this->getMockBuilder(MarkdownConverter::class)
@@ -83,7 +83,7 @@ class CommonMarkExtensionTest extends TestCase
     /**
      * Nothing is converted if the markdown content is null
      */
-    public function testFilterWithNullContent()
+    public function testFilterWithNullContent(): void
     {
         $serviceLocator = new ServiceLocator([
             'my_converter' => fn() => $this->getMockBuilder(MarkdownConverter::class)

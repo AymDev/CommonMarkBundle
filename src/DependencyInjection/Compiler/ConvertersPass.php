@@ -19,8 +19,9 @@ class ConvertersPass implements CompilerPassInterface
     /** @var Reference[] converter service IDs */
     private array $converters = [];
 
-    public function process(ContainerBuilder $container)
+    public function process(ContainerBuilder $container): void
     {
+        /** @var converterConfig[] $converters */
         $converters = $container->getParameter(self::PARAMETER_CONVERTERS);
 
         foreach ($converters as $name => $config) {
@@ -33,7 +34,10 @@ class ConvertersPass implements CompilerPassInterface
         $this->setupTwigExtension($container);
     }
 
-    private function registerConverters(array $converterConfig, ContainerBuilder $container): array
+    /**
+     * @param converterConfig $converterConfig
+     */
+    private function registerConverters(array $converterConfig, ContainerBuilder $container): void
     {
         // Create environment definition
         $environment = new ChildDefinition('aymdev_commonmark.environment.' . $converterConfig['type']);
@@ -69,8 +73,6 @@ class ConvertersPass implements CompilerPassInterface
 
         // Save converter for later twig extension arguments setup
         $this->converters[$converterConfig['name']] = new Reference($converterConfig['name']);
-
-        return $converterConfig;
     }
 
     private function setupTwigExtension(ContainerBuilder $container): void

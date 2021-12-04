@@ -3,12 +3,13 @@
 namespace Tests\Aymdev\CommonmarkBundle\DependencyInjection\Compiler;
 
 use Aymdev\CommonmarkBundle\AymdevCommonmarkBundle;
-use Aymdev\CommonmarkBundle\DependencyInjection\AymdevCommonMarkExtension;
+use Aymdev\CommonmarkBundle\DependencyInjection\AymdevCommonmarkExtension;
 use Aymdev\CommonmarkBundle\DependencyInjection\Compiler\ConvertersPass;
 use Aymdev\CommonmarkBundle\Twig\CommonMarkExtension;
 use League\CommonMark\Extension\InlinesOnly\InlinesOnlyExtension;
 use League\CommonMark\MarkdownConverter;
 use PHPUnit\Framework\TestCase;
+use Psr\Container\ContainerInterface;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\TwigBundle\TwigBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
@@ -26,11 +27,11 @@ class ConvertersPassTest extends TestCase
         parent::tearDown();
     }
 
-    public function testContainerServicesRegistration()
+    public function testContainerServicesRegistration(): void
     {
         $convertersPass = new ConvertersPass();
         $container = new ContainerBuilder();
-        $extension = new AymdevCommonMarkExtension();
+        $extension = new AymdevCommonmarkExtension();
 
         $converters = [
             'converters' => [
@@ -59,12 +60,15 @@ class ConvertersPassTest extends TestCase
 
         self::assertTrue($container->hasParameter('aymdev_commonmark.converters'));
 
-        foreach ($container->getParameter('aymdev_commonmark.converters') as $converter) {
+        /** @var converterConfig[] $converters */
+        $converters = $container->getParameter('aymdev_commonmark.converters');
+
+        foreach ($converters as $converter) {
             $environmentId = 'aymdev_commonmark.environment.' . $converter['name'];
             self::assertTrue($container->has($environmentId));
 
-            foreach ($converter['extensions'] as $extension) {
-                self::assertTrue($container->has($extension));
+            foreach ($converter['extensions'] as $commonmarkExtension) {
+                self::assertTrue($container->has($commonmarkExtension));
             }
 
             // Current service ID
@@ -76,7 +80,7 @@ class ConvertersPassTest extends TestCase
         }
     }
 
-    public function testTwigExtensionRegistration()
+    public function testTwigExtensionRegistration(): void
     {
         $kernel = new AymdevCommonmarkTestKernel([
             'converters' => [
@@ -84,6 +88,8 @@ class ConvertersPassTest extends TestCase
             ]
         ]);
         $kernel->boot();
+
+        /** @var ContainerInterface $container */
         $container = $kernel->getContainer()->get('test.service_container');
 
         /** @var Environment $twig */
@@ -109,7 +115,7 @@ class ConvertersPassTest extends TestCase
      * The InlinesOnlyExtension needs to be added to an empty environment
      * It must not be combined with the CommonMarkCoreExtension
      */
-    public function testEmptyEnvironmentSetup()
+    public function testEmptyEnvironmentSetup(): void
     {
         $kernel = new AymdevCommonmarkTestKernel([
             'converters' => [
@@ -136,8 +142,12 @@ class AymdevCommonmarkTestKernel extends Kernel
 {
     public const KERNEL_CACHE_DIR = __DIR__ . '/../../cache';
 
+    /** @var mixed[] */
     private array $aymdevCommonmarkConfig;
 
+    /**
+     * @param mixed[] $aymdevCommonmarkConfig
+     */
     public function __construct(array $aymdevCommonmarkConfig = [])
     {
         $this->aymdevCommonmarkConfig = $aymdevCommonmarkConfig;
@@ -153,7 +163,7 @@ class AymdevCommonmarkTestKernel extends Kernel
         ];
     }
 
-    public function registerContainerConfiguration(LoaderInterface $loader)
+    public function registerContainerConfiguration(LoaderInterface $loader): void
     {
         $loader->load(function (ContainerBuilder $container) {
             $container->loadFromExtension('aymdev_commonmark', $this->aymdevCommonmarkConfig);

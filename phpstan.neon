@@ -1,0 +1,14 @@
+parameters:
+    level: 9
+    paths:
+        - src
+        - tests
+    bootstrapFiles:
+        - vendor/bin/.phpunit/phpunit-9.5-0/vendor/autoload.php
+    typeAliases:
+        converterConfig: 'array{name: string, type: string, options: mixed[]|null, extensions: class-string[]}'
+    ignoreErrors:
+        -
+            message: '~^Call to an undefined method [a-zA-Z0-9\\_]+::[a-zA-Z]+\(\).$~'
+            path: src/DependencyInjection/Configuration.php
+

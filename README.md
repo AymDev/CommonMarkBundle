@@ -1,5 +1,5 @@
 # CommonMarkBundle
-A **Symfony 4 / 5** bundle to easily configure [league/commonmark](https://github.com/thephpleague/commonmark) **v2**, 
+A **Symfony 4 / 5 / 6** bundle to easily configure [league/commonmark](https://github.com/thephpleague/commonmark) **v2**, 
 allowing you to set multiple **MarkDown** converters.
 
 ![Unit Test Suite](https://github.com/AymDev/CommonMarkBundle/workflows/Unit%20Test%20Suite/badge.svg)

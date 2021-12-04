@@ -144,7 +144,7 @@ class AymdevCommonmarkTestKernel extends Kernel
         parent::__construct('test', true);
     }
 
-    public function registerBundles()
+    public function registerBundles(): iterable
     {
         return [
             new FrameworkBundle(),
@@ -166,12 +166,12 @@ class AymdevCommonmarkTestKernel extends Kernel
         });
     }
 
-    public function getCacheDir()
+    public function getCacheDir(): string
     {
         return self::KERNEL_CACHE_DIR . '/' . spl_object_hash($this);
     }
 
-    public function getLogDir()
+    public function getLogDir(): string
     {
         return $this->getCacheDir();
     }

@@ -19,7 +19,7 @@ class CommonMarkExtension extends AbstractExtension
         $this->serviceLocator = $serviceLocator;
     }
 
-    public function getFilters()
+    public function getFilters(): array
     {
         return [
             new TwigFilter('commonmark', [$this, 'convertMarkdown'], [
